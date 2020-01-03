@@ -1,8 +1,8 @@
 class Molecule {
     constructor(_arrayPosition){
-        this.radius = random(minRadius,maxRadius);
+        this.radius = random(guiVars.minRadius,guiVars.maxRadius);
         this.position = createVector(random(this.radius, width - this.radius * 2), random(this.radius, height - this.radius * 2));
-        this.velocity = createVector(random(minVelocity, maxVelocity), random(minVelocity, maxVelocity));
+        this.velocity = createVector(random(guiVars.minVelocity, guiVars.maxVelocity), random(guiVars.minVelocity, guiVars.maxVelocity));
         this.arrayPosition=_arrayPosition;
         this.isFilled=false;
     }

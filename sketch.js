@@ -1,31 +1,54 @@
 let molecules = [], moleculeKey = [];
-const numOfMolecules = 9;
+//const numOfMolecules = 9;
 let collisonNo;
 let checks = 0;
-let numRows = 6, numCols = 6, colWidth, rowHeight;
-let minRadius = 20, maxRadius = 25, minVelocity = -4, maxVelocity = 4;
+//var numRows = 6, numCols = 6, colWidth, rowHeight;
+// let minRadius = 20, maxRadius = 25, minVelocity = -4, maxVelocity = 4;
+
+//Create an object to hold Variables for gui. - GUI cannot get handle on scope otherwise, unless var is used (Undesirable as it is outdated)
+let guiVars = {
+    numOfMolecules:9,
+    numRows: 6,
+    numCols: 6,
+    minRadius: 20,
+    maxRadius :25,
+    minVelocity :-4,
+    maxVelocity: 4
+};
+
+let colWidth,rowHeight;
+ 
+
+
 
 function setup() {
     createCanvas(600, 600);
     background(127);
-    frameRate(30);
+    //frameRate(30);
     //noLoop();
-    for (let i = 0; i < numOfMolecules; i++) {
+    for (let i = 0; i < guiVars.numOfMolecules; i++) {
         molecules.push(new Molecule(i));
     }
-    colWidth = width / numRows, rowHeight = height / numRows;
+    
+
+    //Gui Set up
+    let gui = new dat.GUI();
+    gui.add(guiVars, 'numRows', 3, 15).step(1);
+    //gui.add(text, 'speed', -5, 5);
 }
 
 function draw() {
-
     background(127);
     stroke(0);
     noFill();
-
+    colWidth = width / guiVars.numRows;
+    rowHeight = height / guiVars.numCols;
 
     drawGrid();
+
     splitIntoGrids();
     checkIntersections();
+    
     //algorithimRunner(1, molecules);
     renderGrid();
 
@@ -38,10 +61,13 @@ function draw() {
 
 }
 
+
+
+
 function drawGrid() {
     //Draw Grid
     for (x = 0; x < width; x += colWidth) {
-        for (y = 0; y < height; y += height / numCols) {
+        for (y = 0; y < height; y += rowHeight) {
             line(x, 0, x, height);
             line(0, y, width, y);
         }
@@ -56,24 +82,26 @@ function renderGrid() {
     });
 }
 
+
+//Broadphase
 function splitIntoGrids() {
     //Empty Array
     moleculeKey = [];
     //Create an array for each box in the grid
-    for (i = 0; i < numCols * numRows; i++) {
+    for (i = 0; i < guiVars.numCols * guiVars.numRows; i++) {
         moleculeKey.push([])
-        //moleculeKey.push(new Set());
     }
     molecules.forEach(molecule => {
         //Gets the x value by mapping the position of x to the amount of coloumns then flooring it
         //Gets Y value by mapping + flooring to amont of rows then multiplying by the number of coloums
         //Push the index to the box the molecule is in
-        const currentCell = Math.floor(molecule.position.x / colWidth) + (Math.floor((molecule.position.y / rowHeight)) * numCols);
+        const currentCell = Math.floor(molecule.position.x / colWidth) + (Math.floor((molecule.position.y / rowHeight)) * guiVars.numCols);
         moleculeKey[currentCell].push(molecule.arrayPosition);
         //moleculeKey[currentCell].add(molecule.arrayPosition);
 
     })
 }
+
 
 function checkIntersections() {
     moleculeKey.forEach(key => {
