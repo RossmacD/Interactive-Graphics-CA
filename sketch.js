@@ -1,4 +1,4 @@
-let molecules = [], moleculeKey = [];
+let molecules, moleculeKey = [];
 //const numOfMolecules = 9;
 let collisonNo;
 let checks = 0;
@@ -17,24 +17,25 @@ let guiVars = {
 };
 
 let colWidth,rowHeight;
- 
-
-
 
 function setup() {
-    createCanvas(600, 600);
+    createCanvas(720, 480);
     background(127);
     //frameRate(30);
     //noLoop();
-    for (let i = 0; i < guiVars.numOfMolecules; i++) {
-        molecules.push(new Molecule(i));
-    }
-    
 
     //Gui Set up
     let gui = new dat.GUI();
-    gui.add(guiVars, 'numRows', 3, 15).step(1);
-    //gui.add(text, 'speed', -5, 5);
+     //Slider for number of molecules - Regenerates the molecules when changed
+    let numMolSlider = gui.add(guiVars, 'numOfMolecules', 0, 100).onChange(()=>generateMolecules()).step(1);
+    
+    let rowSlider=gui.add(guiVars, 'numRows', 3, 25).step(1);
+    let colSlider= gui.add(guiVars, 'numCols', 3, 25).step(1);
+
+   
+    
+    //Generate the Initial Moleules
+    generateMolecules(); 
 }
 
 function draw() {
@@ -52,8 +53,6 @@ function draw() {
     //algorithimRunner(1, molecules);
     renderGrid();
 
-
-
     // console.log('Number of collisions : ' + collisonNo);
     textSize(32);
     fill("#FFF");
@@ -61,7 +60,12 @@ function draw() {
 
 }
 
-
+function generateMolecules(){
+    molecules = [];
+    for (let i = 0; i < guiVars.numOfMolecules; i++) {
+            molecules.push(new Molecule(i));
+        }
+}
 
 
 function drawGrid() {
@@ -96,7 +100,9 @@ function splitIntoGrids() {
         //Gets Y value by mapping + flooring to amont of rows then multiplying by the number of coloums
         //Push the index to the box the molecule is in
         const currentCell = Math.floor(molecule.position.x / colWidth) + (Math.floor((molecule.position.y / rowHeight)) * guiVars.numCols);
+        //console.log(currentCell);
         moleculeKey[currentCell].push(molecule.arrayPosition);
+
         //moleculeKey[currentCell].add(molecule.arrayPosition);
 
     })
