@@ -1,4 +1,5 @@
 let molecules, moleculeKey = [];
+
 //const numOfMolecules = 9;
 let collisonNo;
 let checks = 0;
@@ -7,33 +8,31 @@ let checks = 0;
 
 //Create an object to hold Variables for gui. - GUI cannot get handle on scope otherwise, unless var is used (Undesirable as it is outdated)
 let guiVars = {
-    numOfMolecules:9,
-    numRows: 6,
-    numCols: 6,
+    numOfMolecules:25,
+    numRows: 15,
+    numCols: 15,
     minRadius: 20,
     maxRadius :25,
-    minVelocity :-4,
-    maxVelocity: 4
+    minVelocity :-3,
+    maxVelocity: 3,
+    noisyCollisions:true
 };
 
 let colWidth,rowHeight;
 
 function setup() {
-    createCanvas(720, 480);
+    createCanvas(windowWidth, windowHeight);
     background(127);
-    //frameRate(30);
-    //noLoop();
 
     //Gui Set up
     let gui = new dat.GUI();
-     //Slider for number of molecules - Regenerates the molecules when changed
-    let numMolSlider = gui.add(guiVars, 'numOfMolecules', 0, 100).onChange(()=>generateMolecules()).step(1);
-    
-    let rowSlider=gui.add(guiVars, 'numRows', 3, 25).step(1);
-    let colSlider= gui.add(guiVars, 'numCols', 3, 25).step(1);
+    //Slider for number of molecules - Regenerates the molecules when changed
+    gui.add(guiVars, 'numOfMolecules', 0, 100).onChange(()=>generateMolecules()).step(1);
+    gui.add(guiVars, 'numRows', 1, 30).step(1);
+    gui.add(guiVars, 'numCols', 1, 30).step(1);
 
-   
-    
+    gui.add(guiVars, 'noisyCollisions');
+
     //Generate the Initial Moleules
     generateMolecules(); 
 }
@@ -42,8 +41,8 @@ function draw() {
     background(127);
     stroke(0);
     noFill();
-    colWidth = width / guiVars.numRows;
-    rowHeight = height / guiVars.numCols;
+    colWidth = width / guiVars.numCols;
+    rowHeight = height / guiVars.numRows;
 
     drawGrid();
 
@@ -57,7 +56,6 @@ function draw() {
     textSize(32);
     fill("#FFF");
     text(int(getFrameRate()), 30, 30);
-
 }
 
 function generateMolecules(){
@@ -69,6 +67,7 @@ function generateMolecules(){
 
 
 function drawGrid() {
+    strokeWeight(1)
     //Draw Grid
     for (x = 0; x < width; x += colWidth) {
         for (y = 0; y < height; y += rowHeight) {
@@ -100,11 +99,8 @@ function splitIntoGrids() {
         //Gets Y value by mapping + flooring to amont of rows then multiplying by the number of coloums
         //Push the index to the box the molecule is in
         const currentCell = Math.floor(molecule.position.x / colWidth) + (Math.floor((molecule.position.y / rowHeight)) * guiVars.numCols);
-        //console.log(currentCell);
+        //console.log(molecule.arrayPosition);
         moleculeKey[currentCell].push(molecule.arrayPosition);
-
-        //moleculeKey[currentCell].add(molecule.arrayPosition);
-
     })
 }
 
@@ -121,8 +117,6 @@ function checkIntersections() {
                     }
                 }
             }
-
-
         }
     })
 }
@@ -160,7 +154,7 @@ function algorithimRunner(algorithimNum, moleculeArray) {
                 }
             }
             break
-        //Algorithim 1 - Dosnt Check against previously checked molecules
+        //Algorithim 1 - BruteForce
         case 1:
             for (i = 0; i < moleculeArray.length; i++) {
                 for (j = i + 1; j < moleculeArray.length; j++) {
@@ -174,33 +168,10 @@ function algorithimRunner(algorithimNum, moleculeArray) {
 
         //Algorithim 3 - grid system
         case 2:
-
-
-
-            break
+        break
 
     }
 
     console.timeEnd(checkTime)
     console.log('Number of checks' + checkNum)
 }
-
-//SHIT
-    //    collisonNo = molecules.reduce(
-    //         (collisions=0, molecule, index, molecules) => {
-    //           //console.log(molecule.position.sub(molecules[index + 1].position).mag());
-    //           console.log("collisions");  
-    //           console.log(collisions);
-
-    //             //console.log('molecule');
-    //             //console.log(molecule);
-    //             //console.log('index');
-    //             // console.log(index);
-    //             // console.log('molecules');
-    //             // console.log(molecules);
-
-    //             return molecule.position.copy().sub(molecules[index - 1].position.copy()).mag() < 10
-    //               ?  collisions += 1
-    //               : collisions;
-    //         });
-    //console.log(collisonNo);
