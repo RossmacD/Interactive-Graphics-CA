@@ -17,22 +17,22 @@ class Molecule {
         push()
             translate(this.position.x,this.position.y)
             // if(!guiVars.noisyCollsions){
-            //     ellipse(0,0,this.radius*2,this.radius*2)
+                ellipse(0,0,this.radius*2,this.radius*2)
             // }
             // else{
 
-                beginShape();
-                for (this.a = 0; this.a <= TWO_PI; this.a += TWO_PI / 36) {
+                // beginShape();
+                // for (this.a = 0; this.a <= TWO_PI; this.a += TWO_PI / 36) {
 
                    
-                   // nVal=1;
-                    x = cos(this.a) * this.radius * this.nVal;
-                    y = sin(this.a) * this.radius * this.nVal;
+                //    // nVal=1;
+                //     x = cos(this.a) * this.radius * this.nVal;
+                //     y = sin(this.a) * this.radius * this.nVal;
 
-                    vertex(x, y);
-                }
-                endShape(CLOSE);
-                this.t += .02;
+                //     vertex(x, y);
+                // }
+                // endShape(CLOSE);
+                // this.t += .02;
             //}
 
 

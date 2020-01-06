@@ -8,11 +8,11 @@ let checks = 0;
 
 //Create an object to hold Variables for gui. - GUI cannot get handle on scope otherwise, unless var is used (Undesirable as it is outdated)
 let guiVars = {
-    numOfMolecules:25,
-    numRows: 15,
-    numCols: 15,
-    minRadius: 20,
-    maxRadius :25,
+    numOfMolecules: 1000,
+    numRows: 6,
+    numCols: 6,
+    minRadius: 10,
+    maxRadius :10,
     minVelocity :-3,
     maxVelocity: 3,
     noisyCollisions:true
@@ -21,13 +21,15 @@ let guiVars = {
 let colWidth,rowHeight;
 
 function setup() {
-    createCanvas(windowWidth, windowHeight);
+    //createCanvas(windowWidth, windowHeight);
+    createCanvas(600, 600);
     background(127);
-
+    //frameRate(5)
+    //noLoop();
     //Gui Set up
     let gui = new dat.GUI();
     //Slider for number of molecules - Regenerates the molecules when changed
-    gui.add(guiVars, 'numOfMolecules', 0, 100).onChange(()=>generateMolecules()).step(1);
+    gui.add(guiVars, 'numOfMolecules', 0, 1000).onChange(()=>generateMolecules()).step(1);
     gui.add(guiVars, 'numRows', 1, 30).step(1);
     gui.add(guiVars, 'numCols', 1, 30).step(1);
 
@@ -46,8 +48,9 @@ function draw() {
 
     drawGrid();
 
-    splitIntoGrids();
+    splitIntoGridsNarrow();
     checkIntersections();
+    //algorithimRunner(1,molecules);
     
     //algorithimRunner(1, molecules);
     renderGrid();
@@ -98,6 +101,62 @@ function splitIntoGrids() {
         //Gets the x value by mapping the position of x to the amount of coloumns then flooring it
         //Gets Y value by mapping + flooring to amont of rows then multiplying by the number of coloums
         //Push the index to the box the molecule is in
+    
+
+        const currentCell = Math.floor(molecule.position.x / colWidth) + (Math.floor((molecule.position.y / rowHeight)) * guiVars.numCols);
+        //Overlap Tests:
+        //Check which half f the cell it is in
+        closestXCell=false;
+        closestYCell = false;
+        closestCornerCell=false;
+        
+        
+        if (molecule.position.x < (colWidth * currentCell)+(colWidth/2) && molecule.position.x < (colWidth *currentCell)+molecule.radius){
+            closestXCell =currentCell-1;
+
+        } else if (molecule.position.x > (colWidth * (currentCell+1)) - molecule.radius){
+            
+            closestXCell = currentCell +1;
+        }
+        closestYCellCheck(currentCell,molecule);
+
+        moleculeKey[currentCell].push(molecule.arrayPosition);
+
+      
+        if (closestXCell !== false && closestXCell >= 0 && closestXCell < moleculeKey.length){
+        moleculeKey[closestXCell].push(molecule.arrayPosition);
+    }
+        if (closestYCell !== false && closestYCell >= 0 && closestYCell < moleculeKey.length){
+        moleculeKey[closestYCell].push(molecule.arrayPosition);}
+        
+    })
+
+    
+}
+function closestYCellCheck(currentCell, molecule) {
+    if (molecule.position.y < (rowHeight * (Math.floor((molecule.position.y / rowHeight)))) + (rowHeight / 2) && molecule.position.y < (rowHeight * (Math.floor((molecule.position.y / rowHeight)))) + molecule.radius) {
+       
+        closestYCell = currentCell -  guiVars.numCols;
+
+    } else if (molecule.position.y > (rowHeight * ((Math.floor((molecule.position.y / rowHeight))) + 1)) - molecule.radius) {
+        
+        closestYCell = currentCell +  guiVars.numCols;
+    } 
+}
+
+
+//Narrowphase split into grids
+function splitIntoGridsNarrow() {
+    //Empty Array
+    moleculeKey = [];
+    //Create an array for each box in the grid
+    for (i = 0; i < guiVars.numCols * guiVars.numRows; i++) {
+        moleculeKey.push([])
+    }
+    molecules.forEach(molecule => {
+        //Gets the x value by mapping the position of x to the amount of coloumns then flooring it
+        //Gets Y value by mapping + flooring to amont of rows then multiplying by the number of coloums
+        //Push the index to the box the molecule is in
         const currentCell = Math.floor(molecule.position.x / colWidth) + (Math.floor((molecule.position.y / rowHeight)) * guiVars.numCols);
         //console.log(molecule.arrayPosition);
         moleculeKey[currentCell].push(molecule.arrayPosition);
@@ -120,22 +179,6 @@ function checkIntersections() {
         }
     })
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function algorithimRunner(algorithimNum, moleculeArray) {
     let checkTime, checkNum = 0;
