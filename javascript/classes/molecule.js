@@ -1,6 +1,7 @@
 class Molecule {
     constructor(_arrayPosition){
-        this.radius = random(minRadius,maxRadius);
+        this.originalRadius = random(minRadius,maxRadius);
+        this.radius=this.originalRadius+guiVars.radiusBaseline;
         this.position = createVector(random(this.radius, width - this.radius * 2), random(this.radius, height - this.radius * 2));
         this.velocity = createVector(random(minVelocity, maxVelocity), random(minVelocity, maxVelocity));
         this.arrayPosition=_arrayPosition;
@@ -19,7 +20,7 @@ class Molecule {
         this.isFilled ? fill(this.col) : noFill();
         push()
             translate(this.position.x,this.position.y)
-            ellipse(0, 0, this.radius * 2 + guiVars.radiusBaseline, this.radius * 2 + guiVars.radiusBaseline)
+            ellipse(0, 0, this.radius * 2 , this.radius * 2 )
             
 
 
@@ -29,6 +30,7 @@ class Molecule {
     
     step() {
         this.position.add(this.velocity);
+        this.radius = this.originalRadius + guiVars.radiusBaseline;
     }
     
     checkEdges(){
