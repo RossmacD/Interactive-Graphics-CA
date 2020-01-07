@@ -4,49 +4,55 @@ let molecules, moleculeKey = [];
 let collisonNo;
 let checks = 0;
 //var numRows = 6, numCols = 6, colWidth, rowHeight;
-// let minRadius = 20, maxRadius = 25, minVelocity = -4, maxVelocity = 4;
+ let minRadius = 10, maxRadius = 15, minVelocity = -4, maxVelocity = 4;
 
 //Create an object to hold Variables for gui. - GUI cannot get handle on scope otherwise, unless var is used (Undesirable as it is outdated)
 let guiVars = {
-    numOfMolecules: 1000,
-    numRows: 6,
-    numCols: 6,
-    minRadius: 10,
-    maxRadius :10,
-    minVelocity :-3,
-    maxVelocity: 3,
-    noisyCollisions:true
+    numOfMolecules: 200,
+    numRows: 8,
+    numCols: 16,
+    radiusBaseline:1,
+    showGrid:true,
+    render:true,
+    showTrails:false
 };
 
 let colWidth,rowHeight;
 
 function setup() {
-    //createCanvas(windowWidth, windowHeight);
-    createCanvas(600, 600);
+    createCanvas(windowWidth, windowHeight);
+    //createCanvas(600, 600);
     background(127);
     //frameRate(5)
     //noLoop();
     //Gui Set up
     let gui = new dat.GUI();
+    gui.domElement.id = 'gui';
+    
+    
+
     //Slider for number of molecules - Regenerates the molecules when changed
     gui.add(guiVars, 'numOfMolecules', 0, 1000).onChange(()=>generateMolecules()).step(1);
+    gui.add(guiVars, 'radiusBaseline', 0, 30).step(1);
     gui.add(guiVars, 'numRows', 1, 30).step(1);
     gui.add(guiVars, 'numCols', 1, 30).step(1);
 
-    gui.add(guiVars, 'noisyCollisions');
+    gui.add(guiVars, 'showGrid');
+    gui.add(guiVars, 'render');
+    gui.add(guiVars, 'showTrails');
 
     //Generate the Initial Moleules
     generateMolecules(); 
 }
 
 function draw() {
-    background(127);
-    stroke(0);
+    guiVars.showTrails?background(0,0,0,125):background(0);
+   
     noFill();
     colWidth = width / guiVars.numCols;
     rowHeight = height / guiVars.numRows;
 
-    drawGrid();
+    if(guiVars.showGrid) drawGrid();
 
     splitIntoGridsNarrow();
     checkIntersections();
@@ -70,9 +76,10 @@ function generateMolecules(){
 
 
 function drawGrid() {
+    stroke(80, 150, 50);
     strokeWeight(1)
     //Draw Grid
-    for (x = 0; x < width; x += colWidth) {
+    for (x = colWidth; x < width; x += colWidth) {
         for (y = 0; y < height; y += rowHeight) {
             line(x, 0, x, height);
             line(0, y, width, y);

@@ -1,39 +1,26 @@
 class Molecule {
     constructor(_arrayPosition){
-        this.radius = random(guiVars.minRadius,guiVars.maxRadius);
+        this.radius = random(minRadius,maxRadius);
         this.position = createVector(random(this.radius, width - this.radius * 2), random(this.radius, height - this.radius * 2));
-        this.velocity = createVector(random(guiVars.minVelocity, guiVars.maxVelocity), random(guiVars.minVelocity, guiVars.maxVelocity));
+        this.velocity = createVector(random(minVelocity, maxVelocity), random(minVelocity, maxVelocity));
         this.arrayPosition=_arrayPosition;
         this.isFilled=false;
-        this.t=0;
-        this.nval=1;
+        this.noiseIndex=random(1,100000000);
+        this.col;
     }
     
     render() {
-        stroke(0,0,200);
-        strokeWeight(3)
-        this.isFilled?fill(255,0,0):noFill();
-        this.isFilled ? this.nVal = map(noise(cos(this.a) * 15 + 1, sin(this.a) * 15 + 1, this.t), 0.0, 1.0, 0.5, 1.0):this.nval=1;
+        stroke(255,255,255);
+        strokeWeight(1)
+        
+        this.noiseIndex += 0.001;
+        const colNoise = noise((this.noiseIndex * 2) + 3000) * 100;
+        this.col = color(  80+colNoise,50,  255 - colNoise);
+        this.isFilled ? fill(this.col) : noFill();
         push()
             translate(this.position.x,this.position.y)
-            // if(!guiVars.noisyCollsions){
-                ellipse(0,0,this.radius*2,this.radius*2)
-            // }
-            // else{
-
-                // beginShape();
-                // for (this.a = 0; this.a <= TWO_PI; this.a += TWO_PI / 36) {
-
-                   
-                //    // nVal=1;
-                //     x = cos(this.a) * this.radius * this.nVal;
-                //     y = sin(this.a) * this.radius * this.nVal;
-
-                //     vertex(x, y);
-                // }
-                // endShape(CLOSE);
-                // this.t += .02;
-            //}
+            ellipse(0, 0, this.radius * 2 + guiVars.radiusBaseline, this.radius * 2 + guiVars.radiusBaseline)
+            
 
 
         pop();
