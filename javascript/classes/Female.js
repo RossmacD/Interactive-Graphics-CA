@@ -5,4 +5,5 @@ class Female extends Human {
         this.fill = color(255, 100, 100);
         this.molType=2;
     }
+   
 }

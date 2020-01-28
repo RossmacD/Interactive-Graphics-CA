@@ -22,7 +22,7 @@ class Human {
 
         push()
             translate(this.position.x,this.position.y);
-            ellipse(0, 0, (this.radius + this.pulseRadius) * 2, (this.radius + this.pulseRadius) * 2 );
+            ellipse(0, 0, (this.radius) * 2, (this.radius ) * 2 );
         pop();
         this.isColliding=false;
     }
@@ -34,10 +34,16 @@ class Human {
 
     pulseHuman(){
         if (this.pulseRadius < this.pulseRadiusMax) {
-            this.pulseRadius++;
+            this.pulseRadius+=0.9;
         } else {
             this.pulseRadius=0;
         }
+        push()
+            noFill()
+            stroke(this.stroke)
+            translate(this.position.x, this.position.y);
+            ellipse(0, 0, (this.radius + this.pulseRadius) * 2, (this.radius + this.pulseRadius) * 2);
+        pop();
     }
     
     checkEdges(){

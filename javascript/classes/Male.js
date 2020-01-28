@@ -5,4 +5,6 @@ class Male extends Human {
         this.fill = color(80, 180, 255);
         this.molType=1;
     }
+
+   
 }
