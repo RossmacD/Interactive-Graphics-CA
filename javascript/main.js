@@ -52,7 +52,20 @@ function addGui(){
 function generateMolecules(){
     molecules = [];
     for (let i = 0; i < guiVars.numOfMolecules; i++) {
-            molecules.push(new Molecule(i));
+        const randMol = Math.floor(random(1,3));
+        switch (randMol) {
+            case 0:
+                molecules.push(new Human(i));
+                break
+            case 1:
+                molecules.push(new Male(i));
+                break
+            case 2:
+                molecules.push(new Female(i));
+                break
+
+        }
+           
         }
 }
 
@@ -85,6 +98,8 @@ function renderGrid() {
 
 /**
  * Broadphase split - put the molecules into all of the cells that they are in or overlapping
+ * @todo fuck
+ * @kind
  */
 function splitIntoGridsBroad() {
     //Initialise the Array
@@ -111,6 +126,7 @@ function splitIntoGridsBroad() {
          
         /**
          *Check if within closest cells 
+         
          */
         //X Check
         const currentCellXStart = colWidth * currentCell;
@@ -170,8 +186,12 @@ function checkIntersections() {
             for (i = 0; i < key.length; i++) {
                 for (j = i + 1; j < key.length; j++) {
                     if (p5.Vector.sub(molecules[key[i]].position, molecules[key[j]].position).mag() < molecules[key[i]].radius + molecules[key[j]].radius) {
-                        molecules[key[i]].isFilled = true;
-                        molecules[key[j]].isFilled = true;
+                        molecules[key[i]].isColliding = true;
+                        molecules[key[j]].isColliding = true;
+                        if ((molecules[key[i]].molType + molecules[key[j]].molType) ===3){
+                            molecules[key[i]].pulseHuman()
+                            molecules[key[j]].pulseHuman()
+                        }
                         collisonNo++;
                     }
                 }
@@ -184,8 +204,8 @@ function bruteforceCheck(){
     for (i = 0; i < molecules.length; i++) {
         for (j = i + 1; j < molecules.length; j++) {
             if (p5.Vector.sub(molecules[i].position, molecules[j].position).mag() < molecules[i].radius * 2) {
-                molecules[i].isFilled = true;
-                molecules[j].isFilled = true;
+                molecules[i].isColliding = true;
+                molecules[j].isColliding = true;
                 collisonNo++;
             }
         }

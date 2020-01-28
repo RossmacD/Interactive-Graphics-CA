@@ -1,44 +1,52 @@
-class Molecule {
+class Human {
     constructor(_arrayPosition){
         this.originalRadius = random(minRadius,maxRadius);
         this.radius=this.originalRadius+guiVars.radiusBaseline;
         this.position = createVector(random(this.radius, width - this.radius * 2), random(this.radius, height - this.radius * 2));
         this.velocity = createVector(random(minVelocity, maxVelocity), random(minVelocity, maxVelocity));
         this.arrayPosition=_arrayPosition;
-        this.isFilled=false;
-        this.noiseIndex=random(1,100000000);
+        this.isColliding=false;
+        this.pulseRadius=0;
+        this.pulseRadiusMax=15;
+        //this.noiseIndex=random(1,100000000);
         //this.noiseIndex=1;
-        this.col;
+        this.fill = color(255, 255, 255);
+        this.stroke = color(255, 255, 255);
+        this.molType=0;
     }
     
     render() {
-        stroke(255,255,255);
-        strokeWeight(1)
-        
-        this.noiseIndex += 0.001;
-        const colNoise = noise((this.noiseIndex * 2) + 3000) * 100;
-        this.col = color(  80+colNoise,50,  255 - colNoise);
-        this.isFilled ? fill(this.col) : noFill();
+        stroke(this.stroke);
+        strokeWeight(1);
+        this.isColliding ? fill(this.fill) : noFill();
 
         push()
-            translate(this.position.x,this.position.y)
-            ellipse(0, 0, this.radius * 2 , this.radius * 2 )
+            translate(this.position.x,this.position.y);
+            ellipse(0, 0, (this.radius + this.pulseRadius) * 2, (this.radius + this.pulseRadius) * 2 );
         pop();
-        this.isFilled=false;
+        this.isColliding=false;
     }
     
     step() {
         this.position.add(this.velocity);
         this.radius = this.originalRadius + guiVars.radiusBaseline;
     }
+
+    pulseHuman(){
+        if (this.pulseRadius < this.pulseRadiusMax) {
+            this.pulseRadius++;
+        } else {
+            this.pulseRadius=0;
+        }
+    }
     
     checkEdges(){
         if(this.position.x < this.radius || this.position.x > width-this.radius){
-            this.velocity.x = this.velocity.x * -1
+            this.velocity.x = this.velocity.x * -1;
         }
         
         if(this.position.y < this.radius || this.position.y > height-this.radius){
-            this.velocity.y = this.velocity.y * -1
+            this.velocity.y = this.velocity.y * -1;
         }
     }    
     
