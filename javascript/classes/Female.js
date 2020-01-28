@@ -7,3 +7,20 @@ class Female extends Human {
     }
    
 }
+
+class OldFemale extends Female {
+    constructor(_moleculeId) {
+        super(_moleculeId);
+        this.pulseSpeed = 0.2;
+        this.fill = color(255, 40, 40, 100)
+    }
+}
+
+class YoungFemale extends Female {
+    constructor(_moleculeId) {
+        super(_moleculeId);
+        this.pulseSpeed = 1;
+        this.pulseRadiusMax = 20;
+        this.fill = color(255, 100, 100, 240)
+    }
+}

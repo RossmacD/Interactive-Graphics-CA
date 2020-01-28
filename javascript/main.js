@@ -13,7 +13,7 @@
 //---------------------------
 let molecules, moleculeKey = [];
 let collisonNo,checknum = 0;
-let minRadius = 10, maxRadius = 20, minVelocity = -3, maxVelocity = 3, colWidth, rowHeight;
+let minRadius = 10, maxRadius = 20, minVelocity = -2, maxVelocity = 2, colWidth, rowHeight;
 //Create an object to hold Variables for gui. - GUI cannot get handle on scope otherwise, unless var is used (Undesirable as it is outdated)
 let guiVars = {
     numOfMolecules: 50,
@@ -52,16 +52,22 @@ function addGui(){
 function generateMolecules(){
     molecules = [];
     for (let i = 0; i < guiVars.numOfMolecules; i++) {
-        const randMol = Math.floor(random(1,3));
+        const randMol = Math.floor(random(1,5));
         switch (randMol) {
             case 0:
                 molecules.push(new Human(i));
                 break
             case 1:
-                molecules.push(new Male(i));
+                molecules.push(new OldMale(i));
                 break
             case 2:
-                molecules.push(new Female(i));
+                molecules.push(new YoungMale(i));
+                break
+            case 3:
+                molecules.push(new OldFemale(i));
+                break
+            case 4:
+                molecules.push(new YoungFemale(i));
                 break
 
         }

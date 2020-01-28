@@ -8,8 +8,7 @@ class Human {
         this.isColliding=false;
         this.pulseRadius=0;
         this.pulseRadiusMax=15;
-        //this.noiseIndex=random(1,100000000);
-        //this.noiseIndex=1;
+        this.pulseSpeed=1;
         this.fill = color(255, 255, 255);
         this.stroke = color(255, 255, 255);
         this.molType=0;
@@ -34,7 +33,7 @@ class Human {
 
     pulseHuman(){
         if (this.pulseRadius < this.pulseRadiusMax) {
-            this.pulseRadius+=0.9;
+            this.pulseRadius+=this.pulseSpeed;
         } else {
             this.pulseRadius=0;
         }
