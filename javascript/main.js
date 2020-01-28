@@ -85,6 +85,8 @@ function renderGrid() {
 
 /**
  * Broadphase split - put the molecules into all of the cells that they are in or overlapping
+ * @todo fuck
+ * @kind
  */
 function splitIntoGridsBroad() {
     //Initialise the Array
@@ -111,6 +113,7 @@ function splitIntoGridsBroad() {
          
         /**
          *Check if within closest cells 
+         
          */
         //X Check
         const currentCellXStart = colWidth * currentCell;

@@ -7,6 +7,7 @@ class Molecule {
         this.arrayPosition=_arrayPosition;
         this.isFilled=false;
         this.noiseIndex=random(1,100000000);
+        //this.noiseIndex=1;
         this.col;
     }
     
@@ -18,12 +19,10 @@ class Molecule {
         const colNoise = noise((this.noiseIndex * 2) + 3000) * 100;
         this.col = color(  80+colNoise,50,  255 - colNoise);
         this.isFilled ? fill(this.col) : noFill();
+
         push()
             translate(this.position.x,this.position.y)
             ellipse(0, 0, this.radius * 2 , this.radius * 2 )
-            
-
-
         pop();
         this.isFilled=false;
     }
